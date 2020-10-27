@@ -15,10 +15,12 @@ public class App {
 
         boolean eighth = true;
 
+        // Проверка
+
         int result1 = calculate3(1, 5, 4, 8);
         System.out.println(result1);
 
-        boolean result2 = verify4(1, 5);
+        boolean result2 = verify4(23, 6);
         System.out.println(result2);
 
         positive5(-3);
@@ -39,7 +41,7 @@ public class App {
 
     public static boolean verify4(int a, int b) {
         int sum = a+b;
-        if ( sum >= 10 || sum <= 20)
+        if ( sum >= 10 && sum <= 20)
             return true;
         else
             return false;
