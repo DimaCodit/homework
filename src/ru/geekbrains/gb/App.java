@@ -1,80 +1,159 @@
 package ru.geekbrains.gb;
 
+import java.util.Arrays;
+
 public class App {
 
     public static void main(String[] args) {
-        byte first = 1;
-        short second = 33;
-        int third = 19999;
-        long noname = 444444;
 
-        float fifth = 5.5f;
-        double sixth = 0.5;
+        //{ Задание 1
+        int[] arr = { 1, 1, 0, 0, 1, 0, 1, 1, 0, 0 };
 
-        char seventh = 'H';
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i]== 1)
+                arr[i] = 0;
+            else if (arr[i]== 0)
+                arr[i] = 1;
+        }
 
-        boolean eighth = true;
+        System.out.println(Arrays.toString(arr));
+        //}
 
-        // Проверка
+        //{ Задание 2
+        int[] arrayForFilling = new int[8];
 
-        int result1 = calculate3(1, 5, 4, 8);
-        System.out.println(result1);
+        for (int i = 0; i < 8; i++) {
+            arrayForFilling[i] = i * 3;
+        }
 
-        boolean result2 = verify4(23, 6);
-        System.out.println(result2);
+        System.out.println(Arrays.toString(arrayForFilling));
 
-        positive5(-3);
+        //}
 
-        boolean result3 = verify6(-1);
-        System.out.println(result3);
+        //{ Задание 3
 
-        hello7("Gomer");
+        int[] arrayForChange = { 1, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1 };
 
-        boolean result4 = leapYear8(2000);
-        System.out.println(result4);
+        for (int i = 0; i < arrayForChange.length; i++) {
+            if (arrayForChange[i] < 6)
+                arrayForChange[i] *= 6;
+
+        }
+
+        System.out.println(Arrays.toString(arrayForChange));
+        //}
+
+        //{ Задание 4
+        int[][] arrayTwoDimensional = new int[7][7];
+
+        for (int i = 0; i < arrayTwoDimensional.length; i++) {
+
+            for (int j = 0; j < arrayTwoDimensional[i].length; j++) {
+
+                if (j == i || j == (arrayTwoDimensional[i].length - 1 - i))
+                    arrayTwoDimensional[i][j] = 1;
+
+            }
+
+        }
+
+        for (int[] ints : arrayTwoDimensional) {
+            System.out.println(Arrays.toString(ints));
+        }
+        //}
+
+        //{ Задание 5
+        int[] arrayForMinMax = { 1, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1, 0};
+
+        int minValue = arrayForMinMax[0];
+        int maxValue = arrayForMinMax[0];
+
+        for (int i = 1; i < arrayForMinMax.length; i++) {
+
+            if (arrayForMinMax[i] < minValue)
+                minValue = arrayForMinMax[i];
+            if (arrayForMinMax[i] > maxValue)
+                maxValue = arrayForMinMax[i];
+        }
+
+        System.out.println("min: " + minValue);
+        System.out.println("max: " + maxValue);
+        //}
+
+        //{ Задание 6, проверка
+        System.out.println(checkBalance(new int[]{2, 2, 2, 1, 2, 2, 10, 1}));
+        System.out.println(checkBalance(new int[]{2, 2, 2, 1, 2, 2, 10, 2}));
+        //}
+
+        //{ Задание 7, проверка
+        int [] ArrayShiftResult = toShiftArray(new int[] { 1, 5, 3, 2, 11, 4, 5, 2, 4, 8, 9, 1 }, 4);
+        System.out.println(Arrays.toString(ArrayShiftResult));
+        //}
 
     }
 
-    public static int calculate3(int a, int b, int c, int d) {
-        return a * (b + (c / d));
+    //{ Задание 6
+
+    public static boolean checkBalance(int[] array) {
+
+        boolean result = false;
+
+        int sumStart = array[0];
+        int sumEnd;
+
+        for (int i = 1; i < array.length; i++) {
+
+            sumStart += array[i];
+            sumEnd = array[array.length-1];
+
+            for (int j = array.length - 2; j > i; j--) {
+                sumEnd += array[j];
+            }
+
+            if (sumStart == sumEnd) {
+                return true;
+            }
+
+        }
+
+        return false;
+
     }
 
-    public static boolean verify4(int a, int b) {
-        int sum = a+b;
-        if ( sum >= 10 && sum <= 20)
-            return true;
-        else
-            return false;
+    //}
+
+    //{ Задание 7
+
+    public static int[] toShiftArray(int[] arrayForShift, int numberForShift) {
+
+        //Так как в заданиии не указано в какую сторону смещать элементы, то смещаю в лево.
+
+        numberForShift = Math.abs(numberForShift);
+
+        //Если число для смещения больше размера массива, то ничего не делаю.
+
+        if (Math.abs(numberForShift) > arrayForShift.length) {
+            return arrayForShift;
+        }
+
+        for (int i = 0; i < arrayForShift.length; i++) {
+
+            if (i + numberForShift < arrayForShift.length) {
+                arrayForShift[i] = arrayForShift[i + numberForShift];
+            }
+            else {
+                arrayForShift[i] = 0;
+
+            }
+
+        }
+
+        return arrayForShift;
 
     }
 
-    public static void positive5(int a) {
-        if( a >= 0)
-            System.out.println("Число положителное");
-        else
-            System.out.println("Число отрицательное");
-    }
-
-    public static boolean verify6(int a) {
-        if( a < 0)
-            return true;
-        else
-            return false;
-    }
-
-    public static void hello7(String name) {
-        System.out.println("Hello, " + name + "!");
-    }
-
-    public static boolean leapYear8(int year) {
-        if (year%400 == 0)
-            return true;
-        else if(year%100 == 0)
-            return false;
-        else if (year%4 == 0)
-            return true;
-        else
-            return false;
-    }
+    //}
 
 }
+
+
