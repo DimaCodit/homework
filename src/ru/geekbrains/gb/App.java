@@ -1,78 +1,72 @@
 package ru.geekbrains.gb;
 
+import java.util.Random;
+import java.util.Scanner;
+
 public class App {
 
     public static void main(String[] args) {
-        byte first = 1;
-        short second = 33;
-        int third = 19999;
-        long noname = 444444;
 
-        float fifth = 5.5f;
-        double sixth = 0.5;
+        String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry",
+                "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut",
+                "pear", "pepper", "pineapple", "pumpkin", "potato"};
 
-        char seventh = 'H';
+        //String[] words = {"apple", "orange"};
 
-        boolean eighth = true;
-
-        int result1 = calculate3(1, 5, 4, 8);
-        System.out.println(result1);
-
-        boolean result2 = verify4(1, 5);
-        System.out.println(result2);
-
-        positive5(-3);
-
-        boolean result3 = verify6(-1);
-        System.out.println(result3);
-
-        hello7("Gomer");
-
-        boolean result4 = leapYear8(2000);
-        System.out.println(result4);
+        makeWord(words);
 
     }
 
-    public static int calculate3(int a, int b, int c, int d) {
-        return a * (b + (c / d));
-    }
+    public static void makeWord(String[] words) {
 
-    public static boolean verify4(int a, int b) {
-        int sum = a+b;
-        if ( sum >= 10 || sum <= 20)
-            return true;
-        else
-            return false;
+        Random rand = new Random(words.length - 1);
 
-    }
+        String randomWord =  words[rand.nextInt(words.length)];
 
-    public static void positive5(int a) {
-        if( a >= 0)
-            System.out.println("Число положителное");
-        else
-            System.out.println("Число отрицательное");
-    }
+        Scanner sc = new Scanner(System.in); // создание объекта класса Scanner
 
-    public static boolean verify6(int a) {
-        if( a < 0)
-            return true;
-        else
-            return false;
-    }
+        System.out.println("Отгадайте слово...");
 
-    public static void hello7(String name) {
-        System.out.println("Hello, " + name + "!");
-    }
+        while (true) {
 
-    public static boolean leapYear8(int year) {
-        if (year%400 == 0)
-            return true;
-        else if(year%100 == 0)
-            return false;
-        else if (year%4 == 0)
-            return true;
-        else
-            return false;
+            System.out.println("Введите слово: ");
+
+            String inputWord = sc.nextLine();
+
+            if (inputWord.equals(randomWord)) {
+                System.out.print("Вы угадали!");
+                break;
+            }
+
+            boolean hasMatchingLetters = false;
+            String matchingLetters = "";
+
+            for (int i = 0; i < inputWord.length(); i++) {
+
+                if (inputWord.charAt(i) == randomWord.charAt(i)) {
+                    matchingLetters += inputWord.charAt(i);
+                    hasMatchingLetters = true;
+                }
+                else {
+                    matchingLetters += "*";
+                }
+            }
+
+            for (int i = 15; inputWord.length() < i; i--) {
+                matchingLetters += "*";
+            }
+
+            if (hasMatchingLetters) {
+                System.out.println("Следующие буквы совпадают: " + matchingLetters);
+            }
+            else {
+                System.out.println("Ни одна из букв не совпадает");
+            }
+
+        }
+
     }
 
 }
+
+
