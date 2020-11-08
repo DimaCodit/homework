@@ -1,78 +1,186 @@
 package ru.geekbrains.gb;
 
+import java.util.Random;
+import java.util.Scanner;
+
 public class App {
 
+    public static int SIZE = 3;
+    public static int DOTS_TO_WIN = 3;
+    public static final char DOT_EMPTY = '•';
+    public static final char DOT_X = 'X';
+    public static final char DOT_O = 'O';
+    public static char[][] map;
+    public static Scanner sc = new Scanner(System.in);
+    public static Random rand = new Random();
+
     public static void main(String[] args) {
-        byte first = 1;
-        short second = 33;
-        int third = 19999;
-        long noname = 444444;
-
-        float fifth = 5.5f;
-        double sixth = 0.5;
-
-        char seventh = 'H';
-
-        boolean eighth = true;
-
-        int result1 = calculate3(1, 5, 4, 8);
-        System.out.println(result1);
-
-        boolean result2 = verify4(1, 5);
-        System.out.println(result2);
-
-        positive5(-3);
-
-        boolean result3 = verify6(-1);
-        System.out.println(result3);
-
-        hello7("Gomer");
-
-        boolean result4 = leapYear8(2000);
-        System.out.println(result4);
-
+        initMap();
+        printMap();
+        while (true) {
+            humanTurn();
+            printMap();
+            if (checkWin(DOT_X)) {
+                System.out.println("Победил человек");
+                break;
+            }
+            if (isMapFull()) {
+                System.out.println("Ничья");
+                break;
+            }
+            aiTurn(DOT_X);
+            printMap();
+            if (checkWin(DOT_O)) {
+                System.out.println("Победил Искуственный Интеллект");
+                break;
+            }
+            if (isMapFull()) {
+                System.out.println("Ничья");
+                break;
+            }
+        }
+        System.out.println("Игра закончена");
     }
 
-    public static int calculate3(int a, int b, int c, int d) {
-        return a * (b + (c / d));
+    public static boolean checkWin(char symb) {
+
+        int symbCountHorizont;
+        int symbCountVertical;
+        int symbCountDiagonal1 = 0;
+        int symbCountDiagonal2 = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+
+            symbCountVertical = 0;
+            symbCountHorizont = 0;
+
+            for (int j = 0; j < SIZE; j++) {
+                if (symb == map[i][j]) {
+                    symbCountVertical++;
+                }
+                if (symbCountVertical == DOTS_TO_WIN) {
+                    return true;
+                }
+
+                if(i == j && symb == map[i][j]) {
+                    symbCountDiagonal1++;
+                }
+
+                if(i == (SIZE - 1 -j) && symb == map[i][j]) {
+                    symbCountDiagonal2++;
+                }
+
+                if (symbCountDiagonal1 == DOTS_TO_WIN || symbCountDiagonal2 == DOTS_TO_WIN) {
+                    return true;
+                }
+            }
+
+            for (int j = 0; j < SIZE; j++) {
+                if (symb == map[j][i]) {
+                    symbCountHorizont++;
+                }
+                if (symbCountHorizont == DOTS_TO_WIN) {
+                    return true;
+                }
+            }
+
+        }
+
+        return false;
     }
 
-    public static boolean verify4(int a, int b) {
-        int sum = a+b;
-        if ( sum >= 10 || sum <= 20)
-            return true;
-        else
-            return false;
-
+    public static boolean isMapFull() {
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                if (map[i][j] == DOT_EMPTY) return false;
+            }
+        }
+        return true;
     }
 
-    public static void positive5(int a) {
-        if( a >= 0)
-            System.out.println("Число положителное");
-        else
-            System.out.println("Число отрицательное");
+    public static void aiTurnRandom() {
+        int x, y;
+        do {
+            x = rand.nextInt(SIZE);
+            y = rand.nextInt(SIZE);
+        } while (!isCellValid(x, y));
+        System.out.println("Компьютер походил в точку " + (x + 1) + " " + (y + 1));
+        map[y][x] = DOT_O;
     }
 
-    public static boolean verify6(int a) {
-        if( a < 0)
-            return true;
-        else
-            return false;
+    public static void aiTurn(char opponentSymbol) {
+
+        int symbCountHorizont;
+        int symbCountVertical;
+        int symbCountDiagonal1 = 0;
+        int symbCountDiagonal2 = 0;
+
+        for (int i = 0; i < SIZE; i++) {
+
+            symbCountVertical = 0;
+            symbCountHorizont = 0;
+
+            for (int j = 0; j < SIZE; j++) {
+                if (opponentSymbol == map[i][j]) {
+                    symbCountVertical++;
+                }
+
+                if (i == j && opponentSymbol == map[i][j]) {
+                    symbCountDiagonal1++;
+                }
+
+                if (i == (SIZE - 1 - j) && opponentSymbol == map[i][j]) {
+                    symbCountDiagonal2++;
+                }
+            }
+
+            for (int j = 0; j < SIZE; j++) {
+                if (opponentSymbol == map[j][i]) {
+                    symbCountHorizont++;
+                }
+            }
+        }
     }
 
-    public static void hello7(String name) {
-        System.out.println("Hello, " + name + "!");
+    public static void humanTurn() {
+        int x, y;
+        do {
+            System.out.println("Введите координаты в формате X Y");
+            x = sc.nextInt() - 1;
+            y = sc.nextInt() - 1;
+        } while (!isCellValid(x, y)); // while(isCellValid(x, y) == false)
+        map[y][x] = DOT_X;
     }
 
-    public static boolean leapYear8(int year) {
-        if (year%400 == 0)
-            return true;
-        else if(year%100 == 0)
-            return false;
-        else if (year%4 == 0)
-            return true;
-        else
-            return false;
+    public static boolean isCellValid(int x, int y) {
+        if (x < 0 || x >= SIZE || y < 0 || y >= SIZE) return false;
+        if (map[y][x] == DOT_EMPTY) return true;
+        return false;
     }
+
+    public static void initMap() {
+        map = new char[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                map[i][j] = DOT_EMPTY;
+            }
+        }
+    }
+
+    public static void printMap() {
+        for (int i = 0; i <= SIZE; i++) {
+            System.out.print(i + " ");
+        }
+        System.out.println();
+        for (int i = 0; i < SIZE; i++) {
+            System.out.print((i + 1) + " ");
+            for (int j = 0; j < SIZE; j++) {
+                System.out.print(map[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
 
 }
