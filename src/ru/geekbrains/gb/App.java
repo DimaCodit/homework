@@ -121,6 +121,7 @@ public class App {
             symbCountHorizont = 0;
 
             for (int j = 0; j < SIZE; j++) {
+
                 if (opponentSymbol == map[i][j]) {
                     symbCountVertical++;
                 }
@@ -132,14 +133,78 @@ public class App {
                 if (i == (SIZE - 1 - j) && opponentSymbol == map[i][j]) {
                     symbCountDiagonal2++;
                 }
+
+                if (symbCountVertical == DOTS_TO_WIN - 1 && turnOnVertical(i)) {
+                    return;
+                }
+
+                if (symbCountDiagonal1 == DOTS_TO_WIN - 1 && turnOnDiagonal(true)) {
+                    return;
+                }
+
+                if (symbCountDiagonal2 == DOTS_TO_WIN - 1 && turnOnDiagonal(false)) {
+                    return;
+                }
+
             }
 
             for (int j = 0; j < SIZE; j++) {
                 if (opponentSymbol == map[j][i]) {
                     symbCountHorizont++;
                 }
+                if (symbCountHorizont == DOTS_TO_WIN - 1 && turnOnHorizontal(j)) {
+                    return;
+                }
+            }
+
+        }
+
+        aiTurnRandom();
+
+    }
+
+    public static boolean turnOnVertical(int rowOfMap){
+
+        for (int i = 0; i < SIZE; i++) {
+            if (map[rowOfMap][i] == DOT_EMPTY) {
+                map[rowOfMap][i] = DOT_O;
+                return true;
             }
         }
+        return false;
+
+    }
+
+    public static boolean turnOnHorizontal(int colunmOfMap){
+
+        for (int i = 0; i < SIZE; i++) {
+            if (map[i][colunmOfMap] == DOT_EMPTY) {
+                map[i][colunmOfMap] = DOT_O;
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public static boolean turnOnDiagonal(boolean topDownDiagonal){
+
+        for (int i = 0; i < SIZE; i++) {
+
+            for (int j = 0; j < SIZE; j++) {
+
+                if (topDownDiagonal && i == j && map[i][j] == DOT_EMPTY) {
+                    map[i][j] = DOT_O;
+                    return true;
+                }
+
+                if (topDownDiagonal && i == (SIZE - 1 - j) && map[i][SIZE - 1 - j] == DOT_EMPTY) {
+                    map[i][SIZE - 1 - j] = DOT_O;
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static void humanTurn() {
