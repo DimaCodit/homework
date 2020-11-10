@@ -58,6 +58,10 @@ public class App {
                 if (symb == map[i][j]) {
                     symbCountVertical++;
                 }
+                else if (symbCountVertical != 0){
+                    symbCountVertical = 0;
+                }
+
                 if (symbCountVertical == DOTS_TO_WIN) {
                     return true;
                 }
@@ -65,9 +69,15 @@ public class App {
                 if(i == j && symb == map[i][j]) {
                     symbCountDiagonal1++;
                 }
+                else if (i == j && symbCountDiagonal1 != 0) {
+                    symbCountDiagonal1 = 0;
+                }
 
                 if(i == (SIZE - 1 -j) && symb == map[i][j]) {
                     symbCountDiagonal2++;
+                }
+                else if (i == (SIZE - 1 -j) && symbCountDiagonal2 != 0) {
+                    symbCountDiagonal2 = 0;
                 }
 
                 if (symbCountDiagonal1 == DOTS_TO_WIN || symbCountDiagonal2 == DOTS_TO_WIN) {
@@ -79,6 +89,10 @@ public class App {
                 if (symb == map[j][i]) {
                     symbCountHorizont++;
                 }
+                else if (symbCountHorizont != 0){
+                    symbCountHorizont = 0;
+                }
+
                 if (symbCountHorizont == DOTS_TO_WIN) {
                     return true;
                 }
