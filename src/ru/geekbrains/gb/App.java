@@ -30,6 +30,13 @@ public class App {
         }
 
         plate.info();
+        plate.addFood(10);
+
+        plate.info();
+
+        cats[4].eat(plate);
+
+        plate.info();
 
     }
 
