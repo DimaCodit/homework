@@ -4,13 +4,13 @@ public class App {
 
     public static void main(String[] args) {
 
-        Dog tuzik = new Dog();
+        Dog tuzik = new Dog(10, 500, 0.5);
 
         tuzik.jump(1);
 
-        Dog sharik  = new Dog();
+        Dog sharik  = new Dog(10, 500, 1);
 
-        sharik.setJumpingLimit(1.5);
+        sharik.jumpingLimit = 1.5;
         sharik.jump(1);
 
 

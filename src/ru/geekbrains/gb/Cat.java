@@ -2,8 +2,7 @@ package ru.geekbrains.gb;
 
 public class Cat extends Animal{
 
-    public Cat() {
-        super(0, 200 , 2);
+    public Cat(int swimmingLimit, int runningLimit, double jumpingLimit) {
+        super(swimmingLimit, runningLimit, jumpingLimit);
     }
-
 }

@@ -12,30 +12,6 @@ public abstract class Animal {
         this.jumpingLimit = jumpingLimit;
     }
 
-    public int getSwimmingLimit() {
-        return swimmingLimit;
-    }
-
-    public void setSwimmingLimit(int swimmingLimit) {
-        this.swimmingLimit = swimmingLimit;
-    }
-
-    public int getRunningLimit() {
-        return runningLimit;
-    }
-
-    public void setRunningLimit(int runningLimit) {
-        this.runningLimit = runningLimit;
-    }
-
-    public double getJumpingLimit() {
-        return jumpingLimit;
-    }
-
-    public void setJumpingLimit(double jumpingLimit) {
-        this.jumpingLimit = jumpingLimit;
-    }
-
     void run(int actionMeasure) {
         if (actionMeasure <= runningLimit) {
             System.out.println("run: true");
