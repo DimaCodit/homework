@@ -8,8 +8,9 @@ public class Plate {
         this.food = food;
     }
 
-    public int getFood() {
-        return food;
+    public boolean enoughFood(int amountFood) {
+
+        return food >= amountFood;
     }
 
     public void decreaseFood(int n) {

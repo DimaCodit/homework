@@ -22,7 +22,7 @@ public class Cat {
 
     public void eat(Plate plate) {
 
-        if (plate.getFood() >= appetite) {
+        if (plate.enoughFood(appetite) && !fullness) {
             plate.decreaseFood(appetite);
             fullness = true;
         }
