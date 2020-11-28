@@ -1,78 +1,143 @@
 package ru.geekbrains.gb;
 
-public class App {
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-    public static void main(String[] args) {
-        byte first = 1;
-        short second = 33;
-        int third = 19999;
-        long noname = 444444;
+public class App extends JFrame {
 
-        float fifth = 5.5f;
-        double sixth = 0.5;
+    final String CSV_DELIMITER = ";";
+    private JFileChooser fileChooser = new JFileChooser();
+    private JTable table;
 
-        char seventh = 'H';
+    public App() {
 
-        boolean eighth = true;
+        FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                "CSV", "csv");
+        fileChooser.setFileFilter(filter);
 
-        int result1 = calculate3(1, 5, 4, 8);
-        System.out.println(result1);
+        setSize(800, 400);
+        setTitle("CSV reader");
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 
-        boolean result2 = verify4(1, 5);
-        System.out.println(result2);
+        addTable();
 
-        positive5(-3);
+        addFileSelectionButton();
 
-        boolean result3 = verify6(-1);
-        System.out.println(result3);
+        setVisible(true);
+    }
 
-        hello7("Gomer");
+    private void addTable(){
 
-        boolean result4 = leapYear8(2000);
-        System.out.println(result4);
+        DataTableResult tableData = parseFile(new File("default.csv"));
+
+        String[][] rowData = tableData.getRows();
+        Object[] columnNames = tableData.getHeader();
+
+        table = new JTable(rowData, columnNames);
+
+        add(new JScrollPane(table));
 
     }
 
-    public static int calculate3(int a, int b, int c, int d) {
-        return a * (b + (c / d));
+    private void addFileSelectionButton() {
+        JPanel panel = new JPanel(new BorderLayout());
+        add(panel);
+        JButton button = new JButton();
+        button.setText("Открыть CSV файл");
+        panel.add(button, BorderLayout.EAST);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                readFile();
+            }
+        });
     }
 
-    public static boolean verify4(int a, int b) {
-        int sum = a+b;
-        if ( sum >= 10 || sum <= 20)
-            return true;
-        else
-            return false;
-
+    private void readFile() {
+        int res = fileChooser.showDialog(null, "Открыть файл");
+        if (res == JFileChooser.APPROVE_OPTION) {
+            File chosenFile = fileChooser.getSelectedFile();
+            DataTableResult tableData = parseFile(chosenFile);
+            String[][] rowData = tableData.getRows();
+            Object[] columnNames = tableData.getHeader();
+            table.setModel(new AbstractTableModel() {
+                public String getColumnName(int column) { return columnNames[column].toString(); }
+                public int getRowCount() { return rowData.length; }
+                public int getColumnCount() { return columnNames.length; }
+                public Object getValueAt(int row, int col) { return rowData[row][col]; }
+                public boolean isCellEditable(int row, int column) { return true; }
+                public void setValueAt(String value, int row, int col) {
+                    rowData[row][col] = value;
+                    fireTableCellUpdated(row, col);
+                }
+            });
+        }
     }
 
-    public static void positive5(int a) {
-        if( a >= 0)
-            System.out.println("Число положителное");
-        else
-            System.out.println("Число отрицательное");
+    private DataTableResult parseFile(File parsingFile) {
+
+        HashMap results = new HashMap();
+        ArrayList<String[]> records = new ArrayList();
+        String[] header = new String[0];
+        String[][] rows;
+
+        String filePath = parsingFile.getAbsolutePath();
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(CSV_DELIMITER);
+                if (values.length != 0) {
+                    header = values;
+                    break;
+                }
+            }
+
+            while ((line = br.readLine()) != null) {
+
+                String[] values = line.split(CSV_DELIMITER, header.length);
+                if (values.length > 0) {
+                    records.add(values);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        rows = new String[records.size()][];
+
+        for (int i = 0; i < records.size(); i++) {
+            rows[i] = records.get(i);
+        }
+        return new DataTableResult(header, rows);
     }
 
-    public static boolean verify6(int a) {
-        if( a < 0)
-            return true;
-        else
-            return false;
-    }
+    public class DataTableResult {
+        private String[] header;
 
-    public static void hello7(String name) {
-        System.out.println("Hello, " + name + "!");
-    }
+        public String[] getHeader() {
+            return header;
+        }
 
-    public static boolean leapYear8(int year) {
-        if (year%400 == 0)
-            return true;
-        else if(year%100 == 0)
-            return false;
-        else if (year%4 == 0)
-            return true;
-        else
-            return false;
-    }
+        public String[][] getRows() {
+            return rows;
+        }
 
+        private String[][] rows;
+
+        public DataTableResult(String[] header, String[][] rows) {
+            this.header = header;
+            this.rows = rows;
+        }
+    }
 }
